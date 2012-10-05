@@ -2,10 +2,50 @@
 <html>
 <head>
 	<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-	<script type="text/javascript" src="pigs.js"></script>
+	<style>
+        body {
+            font-family: 'arial';
+        }
+        
+        .pig span {
+            font-size: 50px;
+        }
+        
+        #score span {
+            font-weight: bold;
+            color: #000;
+            font-size: 50px;
+        }
+        
+        #roll-pigs, #reset {
+            font-size: 100px;
+            width: 400px;
+            height: 200px;
+            display: inline-block;
+            border: 2px solid #eee;
+            background: #f3f3f3;
+            border-radius: 20px;
+            line-height: 200px;
+            text-align: center;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body>
+    <a href="#" id="reset">Reset</a>
 	<a href="#" id="roll-pigs">Roll</a>
+    
+    <div id="pig1" class="pig">
+        Pig 1: <span id="pig1-pos"></span>
+    </div>
+    <div id="pig2" class="pig">
+        Pig 2: <span id="pig2-pos"></span>        
+    </div>
+    <div id="score" style="display: none">
+        For you <span id="roll-name"></span> you scored <span id="roll-points"></span>
+    </div>
+    
+    <script type="text/javascript" src="pigs.js"></script>
 </body>
 </html>
