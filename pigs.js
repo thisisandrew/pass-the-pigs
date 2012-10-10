@@ -3,13 +3,13 @@ var PIGS = PIGS || {};
 
 PIGS.Odds = {
 	positions: {
-		sidenodot: { odds: 0.349, pc: 0.349, name: 'Side' },
-        sidedot:   { odds: 0.302, pc: 0.651, name: 'Side .' },
-		back: 	    { odss: 0.224, pc: 0.875, name: 'Razorback' },
-		stand: 	    { odds: 0.088, pc: 0.963, name: 'Trotter' },
-		snout:	    { odds: 0.030, pc: 0.993, name: 'Snouter' },
-		jowl:   	{ odds: 0.007, pc: 1.000, name: 'Leaning Jowler' },
-		special:    { odds: 0.050, pc: 0.000, name: 'Special' }
+		sidenodot: { id: 'sidenodot',   odds: 0.349, pc: 0.349, name: 'Side' },
+        sidedot:   { id: 'sidedot',     odds: 0.302, pc: 0.651, name: 'Side .' },
+		back: 	   { id: 'back',        odds: 0.224, pc: 0.875, name: 'Razorback' },
+		stand: 	   { id: 'stand',       odds: 0.088, pc: 0.963, name: 'Trotter' },
+		snout:	   { id: 'snout',       odds: 0.030, pc: 0.993, name: 'Snouter' },
+		jowl:      { id: 'jowl',        odds: 0.007, pc: 1.000, name: 'Leaning Jowler' },
+		special:   { id: 'special',     odds: 0.050, pc: 0.000, name: 'Special' }
 	},
     
     specials: {
@@ -41,9 +41,63 @@ PIGS.Score = {
     19: { pos1: 'snout',        pos2: 'snout',      score: { points: 40, name: 'double snout' } },
     20: { pos1: 'snout',        pos2: 'jowl',       score: { points: 25, name: 'mixed combo' } },
     21: { pos1: 'jowl',         pos2: 'jowl',       score: { points: 60, name: 'double jowl' } },
+    22: { pos1: 'special',      pos2: 'makinbacon', score: { points: 0, name: 'Makin Bacon' } },
 }
 
+PIGS.Competition = function(){
+    /**
+     * A competition can run multiple consecutive games keeping score until unloaded
+     */
+    
+    this.games = [];
+    var count = 0;
+    
+    var gameCounter = function(){
+        count++;
+        return count;
+    };
+    
+    this.newGame = function(){
+        var idx = gameCounter();
+        //console.log('gameCounter: ' + idx);
+        this.games[idx-1] = new PIGS.Game();
+        //console.log(this.games);
+    };
+}
 
+PIGS.Game = function(){
+    /**
+     * A new game needs to handle n players
+     * Each game needs to handle scores for each player
+     * Score per turn and cumulative scores
+     * Limits number of turns per game
+     */
+    
+    this.player = 1;
+    this.winner = 0;
+    
+    /*
+        player: {
+            name: 'player1',
+            turns: [ { score: 0-100 }, ... ],
+            score: <0-100>,
+        }
+    */
+    this.players = { 1: {}, 2: {} };
+    
+    this.takeTurn = function() {
+        /* Roll, score, accumulate, pass to next player */
+        console.log('take turn: ' + this.player);
+        this.passPigs();
+    };
+    
+    this.passPigs = function(player){
+        var p = 1;
+        if(player == 1) p = 2;
+        
+        this.player = p;
+    }
+};
 
 PIGS.Actions = {
     
@@ -63,17 +117,15 @@ PIGS.Actions = {
             var pos2 = this.getPosition(rnd1);
         }
         
-        score = this.getScore(pos1, pos2);
-        
         var isSpecial = this.checkSpecial(rnd1);
         
         if(isSpecial){
-            pos1 = 'Special';
+            pos1 = 'special';
             pos2 = this.getSpecialPosition(rnd2);
-            score.points = PIGS.Odds.specials[pos2].score;
-            score.name = PIGS.Odds.specials[pos2].name;
         }
         
+        score = this.getScore(pos1, pos2);
+
         console.log(score);
     
         PIGS.UI.showPositions(pos1, pos2);
@@ -131,9 +183,13 @@ PIGS.Actions = {
     }
 }
 
-PIGS.UI = {    
+PIGS.UI = {
+    newGame: function(){
+        pigs.newGame();
+        console.log(pigs.games);
+    },
+    
     showPositions: function(pos1, pos2){
-        
         $("#pig1-pos").text(pos1);
         $("#pig2-pos").text(pos2);
     },
@@ -148,8 +204,14 @@ PIGS.UI = {
     }
 }
 
+var pigs = pigs || new PIGS.Competition();
+
 $(function(){
-	$("#roll-pigs").click(function(){
+	$("#ui-btn-new-game").click(function(){
+		PIGS.UI.newGame();
+	});
+    
+    $("#roll-pigs").click(function(){
 		PIGS.Actions.roll(1);
 	});
     
