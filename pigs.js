@@ -57,12 +57,31 @@ PIGS.Competition = function(){
         return count;
     };
     
+    var gameCount = function(){        
+        return count;
+    }
+    
     this.newGame = function(){
+        //Wipe the scoreboard...
+        
+        //Create a new game ready to play
         var idx = gameCounter();
-        //console.log('gameCounter: ' + idx);
+        console.log('gameCounter: ' + idx);
+        
         this.games[idx-1] = new PIGS.Game();
-        //console.log(this.games);
+        console.log(this.games);
+        
+        this.getCurrentGame().newTurn();
     };
+    
+    this.getCurrentGame = function(){
+        var current = gameCount() - 1;
+        return this.getGame(current);
+    }
+    
+    this.getGame = function(idx) {
+        return this.games[idx];
+    }
 }
 
 PIGS.Game = function(){
@@ -73,34 +92,106 @@ PIGS.Game = function(){
      * Limits number of turns per game
      */
     
+    this.maxplayers = 2;
+    this.maxturns = 10;
     this.player = 1;
     this.winner = 0;
     
     /*
-        player: {
-            name: 'player1',
-            turns: [ { score: 0-100 }, ... ],
-            score: <0-100>,
-        }
+    player: {
+        name: 'player1',
+        turns: [ { score: 0-100 }, ... ],
+        score: <0-100>,
+    }
     */
-    this.players = { 1: {}, 2: {} };
+    this.players = [];
+    this.turns = [];
+    var count = 0;
     
-    this.takeTurn = function() {
-        /* Roll, score, accumulate, pass to next player */
-        console.log('take turn: ' + this.player);
-        this.passPigs();
+    var turnCounter = function(){
+        count++;
+        return count;
     };
     
+    var turnCount = function(){        
+        return count;
+    }
+    
+    
+    //Create a turn for the current player - roll until pass the pigs || pig out etc
+    this.newTurn = function(){ 
+        //Create a new game ready to play
+        var idx = turnCounter();
+        console.log('turnCounter: ' + idx);
+        
+        this.turns[idx-1] = new PIGS.Turn(this.player);
+        console.log(this.turns);
+    }
+    
+    this.getCurrentTurn = function(){
+        var current = turnCount() - 1;
+        return this.getTurn(current);
+    }
+    
+    this.getTurn = function(idx) {
+        return this.turns[idx];
+    }    
+    
+    this.takeTurn = function(){
+        //Roll until pass the pigs || pig out etc
+        var turn = this.getCurrentTurn();
+        
+        turn.roll();
+        
+        console.log()
+        
+        if(typeof this.players[this.player-1] == 'undefined') {
+            this.players[this.player-1] = {};
+            this.players[this.player-1].score = turn.score;
+        }
+        this.players[this.player-1].score = this.players[this.player-1].score + turn.score;
+        
+        console.log(this.players);
+    }
+    
     this.passPigs = function(player){
-        var p = 1;
-        if(player == 1) p = 2;
+        var p = player;
+        p++;
+        
+        console.log(player + ' ' + p);
+        
+        if(p > this.maxplayers) p = 1;
         
         this.player = p;
-    }
+    };
 };
 
-PIGS.Actions = {
+PIGS.Turn = function(player){
+    this.player = player;
+    this.score = 0;
     
+    this.roll = function(){
+        /* Roll, score */
+        console.log('take turn: ' + this.player);
+        var results = PIGS.Actions.roll(this.player);
+        
+        console.log(results);
+        
+        if(results.positions[1] == 'special') {
+            //Do some work with special positions
+        } else {
+            //Accumulate scores for this player and this turn
+            this.score = this.score + results.scores.points
+            
+            console.log(this);
+            
+        }
+        
+        return this.score;
+    }
+}
+
+PIGS.Actions = {
 	roll: function(player) {
         var score = {};
         var isSpecial = false;
@@ -130,6 +221,8 @@ PIGS.Actions = {
     
         PIGS.UI.showPositions(pos1, pos2);
         PIGS.UI.showScore(score.points, score.name);
+        
+        return { positions: { 1: pos1, 2: pos2}, scores: score };
 	},
 	
 	getPosition: function(rnd) {
@@ -186,7 +279,10 @@ PIGS.Actions = {
 PIGS.UI = {
     newGame: function(){
         pigs.newGame();
-        console.log(pigs.games);
+    },
+    
+    roll: function() {
+        pigs.getCurrentGame().takeTurn();  
     },
     
     showPositions: function(pos1, pos2){
@@ -209,10 +305,17 @@ var pigs = pigs || new PIGS.Competition();
 $(function(){
 	$("#ui-btn-new-game").click(function(){
 		PIGS.UI.newGame();
+        return false;
+	});
+    
+    $("#ui-btn-roll").click(function(){
+		PIGS.UI.roll();
+        return false;
 	});
     
     $("#roll-pigs").click(function(){
 		PIGS.Actions.roll(1);
+        return false;
 	});
     
     $("#reset").click(function(){
