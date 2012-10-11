@@ -1,4 +1,4 @@
-﻿/* Pass the Pigs */
+﻿﻿/* Pass the Pigs */
 var PIGS = PIGS || {};
 
 PIGS.Odds = {
@@ -13,7 +13,7 @@ PIGS.Odds = {
 	},
     
     specials: {
-        makinbacon:     { odds: 0.950, pc: 0.950, name: 'Makin Bacon', score: 0 },
+        makinbacon:     { odds: 0.950, pc: 0.950, name: 'Makin Bacon', score: 'reset' },
         kissingbacon:   { odds: 0.045, pc: 0.995, name: 'Kissing Bacon', score: 100 },
         piggyback:      { odds: 0.005, pc: 1.000, name: 'Piggyback', score: 'DQ' }
     }
@@ -22,25 +22,25 @@ PIGS.Odds = {
 PIGS.Score = {
 	1: { pos1:  'sidenodot',   pos2: 'sidenodot', score: { points: 1, name: 'sider' } },
     2: { pos1:  'sidenodot',   pos2: 'sidedot',   score: { points: 0, name: 'pig out' } },
-    3: { pos1:  'sidenodot',   pos2: 'stand',      score: { points: 5, name: 'mixed combo'} },
-    4: { pos1:  'sidenodot',   pos2: 'back',       score: { points: 5, name: 'mixed combo' } },
-    5: { pos1:  'sidenodot',   pos2: 'snout',      score: { points: 10, name: 'mixed combo' } },
-    6: { pos1:  'sidenodot',   pos2: 'jowl',       score: { points: 15, name: 'mixed combo' } },
+    3: { pos1:  'sidenodot',   pos2: 'stand',      score: { points: 5, name: 'trotter'} },
+    4: { pos1:  'sidenodot',   pos2: 'back',       score: { points: 5, name: 'razorback' } },
+    5: { pos1:  'sidenodot',   pos2: 'snout',      score: { points: 10, name: 'snouter' } },
+    6: { pos1:  'sidenodot',   pos2: 'jowl',       score: { points: 15, name: 'leaning jowler' } },
     7: { pos1:  'sidedot',     pos2: 'sidedot',   score: { points: 1, name: 'sider' } },
-    8: { pos1:  'sidedot',     pos2: 'stand',      score: { points: 5, name: 'mixed combo' } },
-    9: { pos1:  'sidedot',     pos2: 'back',       score: { points: 5, name: 'mixed combo' } },
-    10: { pos1: 'sidedot',     pos2: 'snout',      score: { points: 10, name: 'mixed combo' } },
-    11: { pos1: 'sidedot',     pos2: 'jowl',       score: { points: 15, name: 'mixed combo' } },
-    12: { pos1: 'back',         pos2: 'back',       score: { points: 20, name: 'double back' } },
-    13: { pos1: 'back',         pos2: 'stand',      score: { points: 10, name: 'mixed combo' } },
-    14: { pos1: 'back',         pos2: 'snout',      score: { points: 15, name: 'mixed combo' } },
-    15: { pos1: 'back',         pos2: 'jowl',       score: { points: 20, name: 'mixed combo' } },    
-    16: { pos1: 'stand',        pos2: 'stand',      score: { points: 20, name: 'double stand' } },
-    17: { pos1: 'stand',        pos2: 'snout',      score: { points: 15, name: 'mixed combo' } },
-    18: { pos1: 'stand',        pos2: 'jowl',       score: { points: 20, name: 'mixed combo' } },
-    19: { pos1: 'snout',        pos2: 'snout',      score: { points: 40, name: 'double snout' } },
-    20: { pos1: 'snout',        pos2: 'jowl',       score: { points: 25, name: 'mixed combo' } },
-    21: { pos1: 'jowl',         pos2: 'jowl',       score: { points: 60, name: 'double jowl' } },
+    8: { pos1:  'sidedot',     pos2: 'stand',      score: { points: 5, name: 'trotter' } },
+    9: { pos1:  'sidedot',     pos2: 'back',       score: { points: 5, name: 'razorback' } },
+    10: { pos1: 'sidedot',     pos2: 'snout',      score: { points: 10, name: 'snouter' } },
+    11: { pos1: 'sidedot',     pos2: 'jowl',       score: { points: 15, name: 'leaning jowler' } },
+    12: { pos1: 'back',         pos2: 'back',       score: { points: 20, name: 'double razorback' } },
+    13: { pos1: 'back',         pos2: 'stand',      score: { points: 10, name: 'razorback trotter' } },
+    14: { pos1: 'back',         pos2: 'snout',      score: { points: 15, name: 'razorback snouter' } },
+    15: { pos1: 'back',         pos2: 'jowl',       score: { points: 20, name: 'razorback leaning jowler' } },    
+    16: { pos1: 'stand',        pos2: 'stand',      score: { points: 20, name: 'double trotter' } },
+    17: { pos1: 'stand',        pos2: 'snout',      score: { points: 15, name: 'trotter snouter' } },
+    18: { pos1: 'stand',        pos2: 'jowl',       score: { points: 20, name: 'trotter leaning jowler' } },
+    19: { pos1: 'snout',        pos2: 'snout',      score: { points: 40, name: 'double snouter' } },
+    20: { pos1: 'snout',        pos2: 'jowl',       score: { points: 25, name: 'snouter leaning jowler' } },
+    21: { pos1: 'jowl',         pos2: 'jowl',       score: { points: 60, name: 'AILAB double leaning jowler' } },
 }
 
 
@@ -139,12 +139,12 @@ PIGS.UI = {
     },
     
     showScore: function(points, name) {
-        $("#score").hide();
+        $("#scores").hide();
         
         $("#roll-points").text(points);
         $("#roll-name").text(name);
         
-        $("#score").show();
+        $("#scores").show();
     }
 }
 
