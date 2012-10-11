@@ -1,0 +1,51 @@
+body {
+    font-family: 'arial';
+}
+
+#scoreboard {
+    float: left;
+    width: 500px;
+}
+
+#controls {
+    float: left;
+    width: 500px;
+}
+
+.pig span {
+    font-size: 50px;
+}
+
+#scores span {
+    font-weight: bold;
+    color: #000;
+    font-size: 50px;
+}
+
+a {
+    font-size: 30px;
+    padding: 0 20px; 
+    line-height: 50px;
+    display: inline-block;
+    border: 2px solid #eee;
+    background: #f3f3f3;
+    border-radius: 20px;
+    text-align: center;
+    text-decoration: none;
+    margin: 10px;
+}
+
+table {
+    width: 400px;
+    border: 1px solid #ccc;
+    border-collapse: collapse;
+}
+
+td, th {
+    border: 1px solid #ccc;
+    padding: 4px;
+}
+
+td {
+    text-align: right;
+}

@@ -1,117 +1,102 @@
 <!doctype html>
 <html>
 <head>
+    <link rel="stylesheet" type="text/css" href="pigs.css" />
 	<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-	<style>
-        body {
-            font-family: 'arial';
-        }
-        
-        .pig span {
-            font-size: 50px;
-        }
-        
-        #score span {
-            font-weight: bold;
-            color: #000;
-            font-size: 50px;
-        }
-        
-        a {
-            font-size: 30px;
-            padding: 0 20px; 
-            line-height: 50px;
-            display: inline-block;
-            border: 2px solid #eee;
-            background: #f3f3f3;
-            border-radius: 20px;
-            
-            text-align: center;
-            text-decoration: none;
-        }
-        
-        table {
-            width: 400px;
-            border: 1px solid #ccc;
-            border-collapse: collapse;
-        }
-        
-        td, th {
-            border: 1px solid #ccc;
-            padding: 4px;
-        }
-        
-        td {
-            text-align: right;
-        }
-    </style>
 </head>
 
 <body>
-    <table>
-        <tr>
-            <th>Turns</th>
-            <th>Computer</th>
-            <th>Player</th>
-        </tr>
-        <tr id="turn_1">
-            <td>Turn 1</td>
-        </tr>
-        <tr id="turn_2">
-            <td>Turn 2</td>
-        </tr>
-        <tr id="turn_3">
-            <td>Turn 3</td>
-        </tr>
-        <tr id="turn_4">
-            <td>Turn 4</td>
-        </tr>
-        <tr id="turn_5">
-            <td>Turn 5</td>
-        </tr>
-        <tr id="turn_6">
-            <td>Turn 6</td>
-        </tr>
-        <tr id="turn_7">
-            <td>Turn 7</td>
-        </tr>
-        <tr id="turn_8">
-            <td>Turn 8</td>
-        </tr>
-        <tr id="turn_9">
-            <td>Turn 9</td>
-        </tr>
-        <tr id="turn_10">
-            <td>Turn 10</td>
-        </tr>
-        <tr id="totals">
-            <td>Totals</td>
-            <td id="score_comp">0</td>
-            <td id="score_player">0</td>
-        </tr>
-        <tr>
-            <td>Games</td>
-            <td id="game_score_comp"></td>
-            <td id="game_score_player"></td>
-        </tr>
-    </table>
-    
-    <a href="#" id="reset">Wipe & Restart</a> <a href="#" id="ui-btn-new-game">New Game</a>
-    <br />
-    <a href="#" id="ui-btn-roll">Player Roll</a>
-    <br />
-	<a href="#" id="roll-pigs">Roll</a>
-    
-    <div id="pig1" class="pig">
-        Pig 1: <span id="pig1-pos"></span>
+    <div id="scoreboard">
+        <table>
+            <tr>
+                <th>Turns</th>
+                <th>Computer</th>
+                <th>Player</th>
+            </tr>
+            <tr id="turn_1">
+                <td>Turn 1</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_2">
+                <td>Turn 2</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_3">
+                <td>Turn 3</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_4">
+                <td>Turn 4</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_5">
+                <td>Turn 5</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_6">
+                <td>Turn 6</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_7">
+                <td>Turn 7</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_8">
+                <td>Turn 8</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_9">
+                <td>Turn 9</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="turn_10">
+                <td>Turn 10</td>
+                <td class="player_1"></td>
+                <td class="player_2"></td>
+            </tr>
+            <tr id="totals">
+                <th>Totals</th>
+                <td id="score_player_1">0</td>
+                <td id="score_player_2">0</td>
+            </tr>
+            <tr>
+                <th>Games</th>
+                <td id="game_score_player_1"></td>
+                <td id="game_score_player_2"></td>
+            </tr>
+        </table>
     </div>
-    <div id="pig2" class="pig">
-        Pig 2: <span id="pig2-pos"></span>        
-    </div>
-    <div id="score" style="display: none">
-        For you <span id="roll-name"></span> you scored <span id="roll-points"></span>
-    </div>
     
+    <div id="controls">
+        <a href="#" id="reset">Wipe & Restart</a> <a href="#" id="ui-btn-new-game">New Game</a>
+        <br />
+        <a href="#" id="ui-btn-roll">Player Roll</a>
+
+        
+        <div id="pig1" class="pig">
+            Pig 1: <span id="pig1-pos"></span>
+        </div>
+        <div id="pig2" class="pig">
+            Pig 2: <span id="pig2-pos"></span>        
+        </div>
+        <div id="scores" style="display: none">
+            For your <span id="roll-name"></span> you scored <span id="roll-points"></span>
+        </div>   
+    </div>
+
+    <script type="text/javascript" src="pigs.data.js"></script>
+    <script type="text/javascript" src="pigs.competition.js"></script>
+    <script type="text/javascript" src="pigs.game.js"></script>
     <script type="text/javascript" src="pigs.js"></script>
+    
 </body>
 </html>
