@@ -9,94 +9,74 @@ var PIGS = PIGS || {};
 PIGS.Game = function(){
     /**
      * A new game needs to handle n players
+     * Each game has to handle 10 rounds
      * Each game needs to handle scores for each player
      * Score per turn and cumulative scores
      * Limits number of turns per game
      */
     
     this.maxplayers = 2;
-    this.maxturns = 10;
+    this.maxrounds = 10;
     this.player = 1;
     this.winner = 0;
     
-    /*
-    player: {
-        name: 'player1',
-        turns: [ { score: 0-100 }, ... ],
-        score: <0-100>,
-    }
-    */
     this.players = [];
-    this.turns = [];
-    var count = 0;
+    this.rounds = [];
     
-    var turnCounter = function(){
+    var count = 0;
+    var roundCounter = function(){
         count++;
         return count;
     };
     
-    var turnCount = function(){        
+    var roundCount = function(){        
         return count;
     }
-    
-    //Create a turn for the current player - roll until pass the pigs || pig out etc
-    this.newTurn = function(player){
-        if(player) this.player = player;
-        //Create a new game ready to play
-        var idx = turnCounter();
-        console.log('turnCounter: ' + idx);
+
+    this.newRound = function(){
+        //create a new Round
+        var idx = roundCounter();
         
-        this.turns[idx-1] = new PIGS.Turn(this.player);
-        console.log('Turns: ');
-        console.log(this.turns);
-    }
-    
-    this.getCurrentTurn = function(){
-        var current = turnCount() - 1;
-        return this.getTurn(current);
-    }
-    
-    this.getTurn = function(idx) {
-        return this.turns[idx];
-    }    
-    
-    this.takeTurn = function(){
-        console.log('takeTurn(): ' + this.player);
-        //Roll until pass the pigs || pig out etc
-        var turn = this.getCurrentTurn();
-        
-        var result = turn.roll();
-        
-        if(typeof this.players[this.player-1] == 'undefined') {
-            this.players[this.player-1] = {};
-            this.players[this.player-1].score = turn.score;
+        if(idx > this.maxrounds) {
+            console.log('END OF GAME - Out of rounds');
+            console.log(this);
+            this.determineWinner();
+            PIGS.UI.endGame();
+        } else {
+            this.rounds[idx-1] = new PIGS.Round(this);
         }
         
-        //Accumulate
-        this.players[this.player-1].score = this.players[this.player-1].score + turn.score;
-        
-        //Set Scoreboard
-        PIGS.UI.setScore(this.player, turnCount(), turn.score);
-        
-        //Handle Pig Out
-        if(result == 'ptp') {
-            this.passPigs(this.player); 
-        }
-        
-        //console.log(this.players);
+        console.log('Rounds: ');
+        console.log(this.rounds);
     }
     
-    this.passPigs = function(player){
-        var p = player;
-        p++;
+    this.getCurrentRound = function(){
+        var current = roundCount() - 1;
+        return this.getRound(current);
+    }
+    
+    this.getRound = function(idx) {
+        return this.rounds[idx];
+    }
+
+    this.getRoundCount = function(){
+        var current = roundCount() - 1;
+        return current;
+    }
+
+    this.determineWinner = function(){
+        //Who's got the mostest points?
+        console.log(this.players[1].score);
+        console.log(this.players[2].score);
         
-        console.log(player + ' ' + p);
-        
-        if(p > this.maxplayers) {
-            p = 1;
+        if(this.players[1].score > this.players[2].score) {
+            this.winner = 1;
+        } else {
+            this.winner = 2;
         }
+    }
         
-        this.player = p;
-        this.newTurn(this.player);
-    };
+    
+    //A new game should spawn a new Round...
+    this.newRound();
 };

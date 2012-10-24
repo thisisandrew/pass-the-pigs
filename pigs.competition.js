@@ -33,16 +33,20 @@ PIGS.Competition = function(){
         this.games[idx-1] = new PIGS.Game();
         
         console.log(this.games);
-        
-        this.getCurrentGame().newTurn();
     };
     
     this.getCurrentGame = function(){
+        console.log('PIGS.Competition.getCurrentGame()');
+        
         var current = gameCount() - 1;
+        console.log(current);
+        
         return this.getGame(current);
     }
     
     this.getGame = function(idx) {
         return this.games[idx];
     }
+    
+    this.newGame();
 }
