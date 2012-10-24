@@ -8,6 +8,24 @@
 var PIGS = PIGS || {};
 
 PIGS.Odds = {
+    /**
+     * Odds calculated from 6000 rolls (12000 individual pig rolls)
+     * See data/pig.dat.xlsx
+     */
+    
+    //8 significant digits to be implemented
+    /*
+    positions: {
+        sidenodot: { id: 'sidenodot',   odds: 0.345156433, pc: 0.345156433, name: 'Side' },
+        sidedot:   { id: 'sidedot',     odds: 0.300485193, pc: 0.645641626, name: 'Side .' },
+		back: 	   { id: 'back',        odds: 0.226535051, pc: 0.872176677, name: 'Razorback' },
+		stand: 	   { id: 'stand',       odds: 0.092186716, pc: 0.964363393, name: 'Trotter' },
+		snout:	   { id: 'snout',       odds: 0.030784675, pc: 0.995148068, name: 'Snouter' },
+		jowl:      { id: 'jowl',        odds: 0.004851932, pc: 1.000000000, name: 'Leaning Jowler' },
+		special:   { id: 'special',     odds: 0.003833333, pc: 0.000000000, name: 'Special' }
+    },
+    */
+    
 	positions: {
 		sidenodot: { id: 'sidenodot',   odds: 0.349, pc: 0.349, name: 'Side' },
         sidedot:   { id: 'sidedot',     odds: 0.302, pc: 0.651, name: 'Side .' },
