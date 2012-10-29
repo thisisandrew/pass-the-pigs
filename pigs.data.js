@@ -33,7 +33,7 @@ PIGS.Odds = {
 		stand: 	   { id: 'stand',       odds: 0.088, pc: 0.963, name: 'Trotter' },
 		snout:	   { id: 'snout',       odds: 0.030, pc: 0.993, name: 'Snouter' },
 		jowl:      { id: 'jowl',        odds: 0.007, pc: 1.000, name: 'Leaning Jowler' },
-		special:   { id: 'special',     odds: 0.050, pc: 0.000, name: 'Special' }
+		special:   { id: 'special',     odds: 0.004, pc: 0.000, name: 'Special' }
 	},
     
     specials: {
@@ -66,6 +66,6 @@ PIGS.Score = {
     20: { pos1: 'snout',        pos2: 'jowl',           score: { points: 25,    name: 'snouter leaning jowler' } },
     21: { pos1: 'jowl',         pos2: 'jowl',           score: { points: 60,    name: 'AILAB double leaning jowler' } },
 	22: { pos1: 'special',      pos2: 'makinbacon',     score: { points: 0,     name: 'Makin Bacon' } },
-    23: { pos1: 'special',      pos2: 'kissingbacon',   score: { points: 0,     name: 'Kissing Bacon' } },
+    23: { pos1: 'special',      pos2: 'kissingbacon',   score: { points: 100,   name: 'Kissing Bacon' } },
     24: { pos1: 'special',      pos2: 'piggyback',      score: { points: 0,     name: 'Piggyback' } },
 }

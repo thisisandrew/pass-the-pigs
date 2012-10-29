@@ -37,7 +37,7 @@ PIGS.Actions = {
         PIGS.UI.showPositions(pos1, pos2);
         PIGS.UI.showScore(score.points, score.name);
         
-        return { positions: { 1: pos1, 2: pos2}, scores: score };
+        return { positions: { 'pos1': pos1, 'pos2': pos2}, scores: score };
 	},
 	
 	getPosition: function(rnd) {

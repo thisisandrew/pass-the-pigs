@@ -6,7 +6,7 @@
 
 var PIGS = PIGS || {};
 
-PIGS.Game = function(){
+PIGS.Game = function(comp){
     /**
      * A new game needs to handle n players
      * Each game has to handle 10 rounds
@@ -15,10 +15,12 @@ PIGS.Game = function(){
      * Limits number of turns per game
      */
     
+    this.competition = comp;
     this.maxplayers = 2;
     this.maxrounds = 10;
     this.player = 1;
-    this.winner = 0;
+    this.winner = null;
+    this.status = 1;
     
     this.players = [];
     this.rounds = [];
@@ -40,8 +42,7 @@ PIGS.Game = function(){
         if(idx > this.maxrounds) {
             console.log('END OF GAME - Out of rounds');
             console.log(this);
-            this.determineWinner();
-            PIGS.UI.endGame();
+            this.end();
         } else {
             this.rounds[idx-1] = new PIGS.Round(this);
         }
@@ -62,7 +63,15 @@ PIGS.Game = function(){
     this.getRoundCount = function(){
         var current = roundCount() - 1;
         return current;
-    }
+    };
+    
+    this.end = function () {
+        this.determineWinner();
+        this.competition.incrementWinner(this.winner);
+        this.status = 0;
+        PIGS.UI.setGameScore(this.winner, this.competition.players[this.winner].score);
+        PIGS.UI.endGame();
+    };
 
     this.determineWinner = function(){
         //Who's got the mostest points?

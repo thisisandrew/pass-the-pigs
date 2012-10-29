@@ -12,6 +12,7 @@ PIGS.Competition = function(){
      */
     
     this.games = [];
+    this.players = [];
     var count = 0;
     
     var gameCounter = function(){
@@ -30,7 +31,7 @@ PIGS.Competition = function(){
         var idx = gameCounter();
         console.log('gameCounter: ' + idx);
         
-        this.games[idx-1] = new PIGS.Game();
+        this.games[idx-1] = new PIGS.Game(this);
         
         console.log(this.games);
     };
@@ -42,11 +43,18 @@ PIGS.Competition = function(){
         console.log(current);
         
         return this.getGame(current);
-    }
+    };
     
     this.getGame = function(idx) {
         return this.games[idx];
-    }
+    };
+    
+    this.incrementWinner = function(player) {
+        //Keep score of who won which game
+        
+        if(typeof this.players[player] == 'undefined') this.players[player] = { score: 0 }; 
+        this.players[player].score = this.players[player].score + 1;
+    };
     
     this.newGame();
 }

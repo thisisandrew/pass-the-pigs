@@ -15,9 +15,10 @@ PIGS.Turn = function(game){
     this.player = this.game.player;
     console.log('New Turn: ' + this.player);
 
-    this.score = 0;
+    this.score = null;
     
     this.roll = function(){
+        
         /* Roll, score */
         console.log('take turn: ' + this.player);
         var results = PIGS.Actions.roll(this.player);
@@ -25,17 +26,20 @@ PIGS.Turn = function(game){
         console.log(results);
         
         if(results.scores.name == 'pig out') {
-            this.score = 0;
-            return 'ptp';
-        } else if(results.positions[1] == 'special') {
-            this.score = 0;
-            return results.scores.name; //Pass back the name of the special position
+            this.score = results.scores.points;
+            //return 'ptp';
+        } else if(results.positions.pos1 == 'special') {
+
+            this.score = results.scores.points;
+            
         } else {
             //Accumulate scores for this turn
             this.score = this.score + results.scores.points
             
             console.log(this);
-            return results.scores.points;
+            //return results.scores.points;
         }
+        
+        return results;
     }
 }

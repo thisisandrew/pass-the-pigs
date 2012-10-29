@@ -23,35 +23,97 @@ PIGS.Round = function(game){
     }
     
     this.takeTurn = function(){
+        //Check game hasn't ended
+        if(this.game.status == 0) {
+            alert('Game has ended. Start another!');
+            return;
+        }
+        
         var p = this.game.player;
+        if(typeof this.game.players[p] == 'undefined') this.game.players[p] = { score: 0 };
+        
         console.log('takeTurn(): ' + p);
         //Roll until pass the pigs || pig out etc
         var turn = this.turns[p];
         
         var result = turn.roll();
         
-        //Set Scoreboard
-        //console.log('set scoreboard');
-        //console.log(this.game);
+        console.log(result);
+        
+        //Set Cumulative Turn Scoreboard
         PIGS.UI.setScore(this.game.getRoundCount(), p, turn.score);
         
         //Handle Pig Out
-        if(result == 'ptp') {
-            this.passPigs(); 
-        } else if (result == 'makinbacon') {
-            if(typeof this.game.players[p] == 'undefined') this.game.players[p] = { score: 0 };
-            this.game.players[p].score = 0;
-            PIGS.UI.setPlayerTotal(p, this.game.players[p].score);
+        if(result.scores.name == 'pig out') {
+            //Then pass the pigs
             this.passPigs();
+        } else if (result.positions.pos1 == 'special') {
+            //Handle all special rolls
+            console.log('SPECIAL: ')
+            console.log(result);
+            
+            if (result.positions.pos2 == 'makinbacon') {
+                console.log('makinbacon');
+                
+                this.game.players[p].score = 0;
+                PIGS.UI.setPlayerTotal(p, this.game.players[p].score);
+                
+                //Make previous all previous turns in previous rounds for this player zero
+                for(round_idx in this.game.rounds){
+                    for(turn_idx in this.game.rounds[round_idx].turns){
+                        if(this.game.rounds[round_idx].turns[turn_idx].player == p) {
+                            //this is a previous turn from a previous round for this player
+                            this.game.rounds[round_idx].turns[turn_idx].score = 0;
+                            PIGS.UI.setScore(round_idx, p, 0);
+                        }
+                    }
+                }
+                
+                this.passPigs();
+            } else if (result.positions.pos2 == 'kissingbacon') {
+                //Score 100 - player wins
+                //Bank the points
+                this.game.players[p].score = this.game.players[p].score + 100;
+                PIGS.UI.setPlayerTotal(p, this.game.players[p].score);
+                
+                this.game.end();
+            } else if (result.positions.pos2 == 'piggyback') {
+                //
+            }
+            
+        } else {
+            //If no pig out or special then update normal scores...
+            
+            //Set the cumulative player score - before accounting for special and pig outs
+            
+            //Update the UI with points scored in this turn
+            var total = this.game.players[p].score + turn.score;
+            PIGS.UI.setPlayerTotal(p, total);
+            
+            //Check if the players score has topped 100
+            if(total >= 100) {
+                this.game.players[p].score = total;
+                this.game.end();
+            }
         }
         
-        //console.log(this.players);
+        console.log(this.game.players);
     }
     
     //Control the flow of turns and rounds.
     //Switches players and sytarts new round at end of previous.
     this.passPigs = function(){
         var p = this.game.player;
+        
+        console.log(this.turns[p].score);
+        
+        //TODO: Check if the player has rolled and scored before passing the pigs...
+        if(this.turns[p].score == null) {
+            //No roll yet this turn
+            alert('You must roll at least once before you Pass The Pigs');
+            return;
+        }
+
         
         //Accumulate points for this player
         if(typeof this.game.players[p] == 'undefined') this.game.players[p] = { score: 0 };
