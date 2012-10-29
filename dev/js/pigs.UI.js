@@ -26,7 +26,7 @@ PIGS.UI = {
         }
     },
     
-    setScore: function {round, player, score) {
+    setScore: function (round, player, score) {
         var r = parseInt(round) + 1;
         console.log('UI.setScore round: ' + r + ' player: ' + player + ' score: ' + score);
         
@@ -42,8 +42,6 @@ PIGS.UI = {
             var r = g.getCurrentRound();
             r.passPigs();
         }
-        
-        
     },
     
     setPlayerTotal: function (player, total) {

@@ -1,7 +1,7 @@
 /**
  * Pass the Pigs
  * @author Andrew Hill
- * PIGS.Actions
+ * PIGS.Turn
  */
 
 var PIGS = PIGS || {};
