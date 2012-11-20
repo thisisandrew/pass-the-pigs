@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="PIGS" default="prod" basedir=".">
+
+    <description>Build file for JS and CSS</description>
+
+    <target name="-load.properties" description="Set properties for this build">
+		<property name="tools.dir" value="C:/tools"/>
+        <!--YUI Compressor location-->
+        <property name="yui.jar" value="${tools.dir}/yuicompressor/build/yuicompressor-2.4.7.jar"/>
+        <!--Lint/Hint dir-->
+        <property name="jslint.js" value="${tools.dir}/jslint/jslint.js"/>
+        <!--Rhino dir-->
+        <property name="js.jar" value="${tools.dir}/rhino/js.jar"/>
+		
+		<!--Source dir-->
+        <property name="src.dir" value="dev" />
+		<property name="lib.dir" value="${src.dir}/lib/" />
+		<!--Source JS dir-->
+		<property name="src.js.dir" value="${src.dir}/js"/>
+        <!--Source CSS dir-->
+        <property name="src.css.dir" value="${src.dir}/css"/>
+        		
+        <!--Output dir-->
+        <property name="build.dir" value="build"/>
+		
+		<!--Prod dir-->
+		<property name="prod.dir" value="app/"/>
+        
+		<!--Build version information -->
+        <property name="build.major" value="1"/>
+        <property name="build.minor" value="0"/>
+    </target>
+
+    <!--Create build directories-->
+    <target name="-init" depends="-load.properties" description="Create build directory structure">
+        
+        <!--Delete previous build files-->
+        <delete dir="${build.dir}"/>
+        
+        <!--Recreate the build directories-->
+        <mkdir dir="${build.dir}"/>
+        <mkdir dir="${build.dir}/js"/>
+        <mkdir dir="${build.dir}/css"/>
+    </target>
+
+
+	 <!--JS Lint-->
+	<target depends="-init" name="-js.lint">
+	    <pathconvert pathsep=" " property="jsfiles">
+	        <fileset dir="${build.dir}/js/">
+	            <include name="**/*.js"/>
+	        </fileset>
+	    </pathconvert>
+	    <exec dir="${build.dir}/js/" executable="java" failonerror="true">
+	        <arg line="-jar ${js.jar} ${jslint.js} ${jsfiles}"/>
+	    </exec>
+	    <echo>Finished</echo>
+	</target>
+	
+    <!--Concatenate JS files-->
+    <target name="-js.concatenate" description="Concatenates specified JavaScript files">
+        <concat destfile="${build.dir}/js/scripts.js">
+            <fileset dir="${src.dir}/">
+				<include name="**/*.js"/>
+			</fileset>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+
+    <!--Minify JS files-->
+    <target name="-js.minify" depends="-js.concatenate" description="Minifies JavaScript files">
+        <apply executable="java" parallel="false" dest="${build.dir}/js">
+            <fileset 
+                dir="${build.dir}/js" 
+                includes="scripts.js"/>
+            <arg line="-jar"/>
+            <arg path="${yui.jar}"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.js" to="*.min.js"/>
+            <targetfile/>
+        </apply>
+        <echo>Finished</echo>
+    </target>
+	
+	<target name="-js.prod" depends="-js.minify" description="Build the JS and copy for prod">
+		<copy todir="${prod.dir}/js" flatten="true">
+			<fileset dir="${build.dir}/">
+				<include name="**/*.js"/>
+			</fileset>
+		</copy>
+	</target>
+
+	
+	<!--Concatenate CSS files-->
+    <target name="-css.concatenate" depends="-init" description="Concatenates specified CSS files">
+        <concat destfile="${build.dir}/css/styles.css">
+            <!--first.css and second.css should be first in the concatenated file-->
+            
+			<filelist 
+				dir="${lib.dir}/css/html5boilerplate" 
+				files="bp.css"/>
+			
+            <!--All of the other files in the directory should appear after.-->
+            <fileset 
+				dir="${src.dir}/"
+				includes="**/*.css" 
+				excludes="**/bp.css"/>
+        </concat>
+        <echo>Finished</echo>
+    </target>
+	
+    <!--Minify CSS files-->
+    <target name="-css.minify" depends="-css.concatenate" description="Minifies CSS files">
+        <apply executable="java" parallel="false"  dest="${build.dir}/css">
+            <fileset 
+                dir="${build.dir}/css" 
+                includes="styles.css"/>
+            <arg line="-jar"/>
+            <arg path="${yui.jar}"/>
+            <arg line="--line-break 0"/>
+            <srcfile/>
+            <arg line="-o"/>
+            <mapper type="glob" from="*.css" to="*.min.css"/>
+            <targetfile/>
+        </apply>
+        <echo>Finished</echo>
+    </target>
+	
+	<target name="-css.prod" depends="-css.minify" description="Build the CSS and Copies for Prod">
+		<copy todir="${prod.dir}/css" flatten="true">
+			<fileset dir="${build.dir}/">
+				<include name="**/*.css"/>
+			</fileset>
+		</copy>
+		
+		<copy todir="${prod.dir}/css/images" flatten="true">
+			<fileset dir="${src.css.dir}/images/">
+				<include name="**/*.*"/>
+			</fileset>
+		</copy>
+	</target>
+
+    <!--Build-->
+    <target name="prod" 
+        description="Builds project files for production use"
+        depends="
+            -load.properties, 
+            -init, 
+            -js.prod">
+	</target>
+		
+	<target name="init" depends="-init"></target>
+	<target name="js" depends="-init, -js.concatenate"></target>
+	<target name="css" depends="-init, -css.prod"></target>
+	
+</project>

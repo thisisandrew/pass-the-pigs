@@ -1,6 +1,6 @@
 /**
  * Pass the Pigs
- * @auhtor Andrew Hill
+ * @author Andrew Hill
  * PIGS.Odds
  * PIGS.Score
  */
