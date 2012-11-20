@@ -18,7 +18,7 @@ PIGS.Game = function(comp){
     this.competition = comp;
     this.maxplayers = 2;
     this.maxrounds = 10;
-    this.player = 1;
+    //this.player = 1;
     this.winner = null;
     this.status = 1;
     
@@ -83,9 +83,29 @@ PIGS.Game = function(comp){
         } else {
             this.winner = 2;
         }
-    }
-        
+    };
     
+    this.determineFirstPlayer = function(){
+        var prev = this.getPreviousGame();
+        
+        //if there is a previous game use it to calculate the first_player
+        //else first_player = 1
+        if(prev && prev.first_player == 1) {
+            this.first_player = 2
+            this.player = 2;
+        } else {
+            this.first_player = 1
+            this.player = 1;    
+        }
+    };
+    
+    this.getPreviousGame = function(){
+        //If this in NOT the first game then get the previous game
+        var prev = this.competition.getPreviousGame();
+        return prev;
+    };
+        
     //A new game should spawn a new Round...
+    this.determineFirstPlayer();
     this.newRound();
 };

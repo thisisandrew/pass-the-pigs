@@ -12,7 +12,7 @@ PIGS.Round = function(game){
     //Each round has a turn for each player.
     //The round controls which player is active
     this.game = game;
-    this.game.player = 1;
+    //this.game.player = this.game.first_player;
     
     this.turns = {};
     
@@ -125,13 +125,57 @@ PIGS.Round = function(game){
         console.log('Pass the Pigs from ' + this.game.player + ' to ' + p);
         
         if(p > this.game.maxplayers) {
-            this.game.newRound();
+            this.game.player = 1;
         } else {
             this.game.player = p;
-            this.newTurn(); 
+        }
+        
+        //Depending on who started first it may be that the other player still needs to go in this round.
+        //Check if both turns have been taken in this round before moving to a new round.
+        if(this.checkAllPlayersHaveTakenTurn()) {
+            //Move to new round
+            this.game.newRound();
+        } else {
+            this.newTurn();
         }
         
         PIGS.UI.showPlayer();
+    };
+    
+    this.checkAllPlayersHaveTakenTurn = function(){
+        //count the number of turns.
+        //if they are all there then the riund is all done...
+        if(this.countTurns() < this.game.maxplayers) {
+            console.log('checkAllPlayersHaveTakenTurn false');
+            return false;
+        }
+        
+        console.log('checkAllPlayersHaveTakenTurn true');
+        return true;
+        
+        /*
+        for(idx in this.turns){
+            console.log('checking turns: ');
+            console.log(this.turns[idx]);
+            
+            if(this.turns[idx].score == null) {
+                console.log('checkAllPlayersHaveTakenTurn false');
+                return false;
+            }
+        }
+        
+        console.log('checkAllPlayersHaveTakenTurn true');
+        return true;
+        */
+    };
+    
+    this.countTurns = function(){
+        var size = 0, idx;
+        for(idx in this.turns){
+            if(this.turns.hasOwnProperty(idx)) size++; 
+        }
+        
+        return size;
     };
     
     this.newTurn();

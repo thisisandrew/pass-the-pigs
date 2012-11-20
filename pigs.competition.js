@@ -45,6 +45,18 @@ PIGS.Competition = function(){
         return this.getGame(current);
     };
     
+    this.getPreviousGame = function(){
+        if(gameCount() > 1){
+            var previous = gameCount() - 2;
+        } else {
+            return false;
+        }
+        
+        //console.log(previous);
+        
+        return this.getGame(previous);
+    };
+    
     this.getGame = function(idx) {
         return this.games[idx];
     };
