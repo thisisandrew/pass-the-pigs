@@ -20,9 +20,21 @@ PIGS.Round = function(game){
     
     this.newTurn = function(){
         this.turns[this.game.player] = new PIGS.Turn(this.game);
+        
+        //Check if the 2nd player is AI?
+        //Otherwise the human player will play via the UI.
+        if(this.game.competition.ai) {
+            //then lets kick in the strategy for AI player
+            //hand this Turn to the strategy and let it play until Pass the Pigs OR Pig Out OR other turn ending event
+            PIGS.Strategy.go(this);
+        }
     }
     
     this.takeTurn = function(){
+        //outcome can be passed back to strategy to tell it whether the player pigged out or what have you
+        // 0 - turn over, 1 - turn can continue
+        var outcome = 1;
+        
         //Check game hasn't ended
         if(this.game.status == 0) {
             alert('Game has ended. Start another!');
@@ -82,6 +94,9 @@ PIGS.Round = function(game){
             }
             
         } else {
+            //Can roll again;
+            outcome = 1;
+            
             //If no pig out or special then update normal scores...
             
             //Set the cumulative player score - before accounting for special and pig outs
@@ -98,6 +113,8 @@ PIGS.Round = function(game){
         }
         
         console.log(this.game.players);
+        
+        return outcome;
     }
     
     //Control the flow of turns and rounds.

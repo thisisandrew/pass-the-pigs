@@ -9,11 +9,14 @@ var PIGS = PIGS || {};
 PIGS.Competition = function(){
     /**
      * A competition can run multiple consecutive games keeping score until unloaded
+     * determine of the player 2 should be an ai player or human
      */
     
     this.games = [];
     this.players = [];
+    this.ai = true;
     var count = 0;
+    
     
     var gameCounter = function(){
         count++;

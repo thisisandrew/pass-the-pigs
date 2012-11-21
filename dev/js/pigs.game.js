@@ -88,6 +88,9 @@ PIGS.Game = function(comp){
     this.determineFirstPlayer = function(){
         var prev = this.getPreviousGame();
         
+        console.log('determine fisrt player');
+        console.log(prev);
+        
         //if there is a previous game use it to calculate the first_player
         //else first_player = 1
         if(prev && prev.first_player == 1) {
