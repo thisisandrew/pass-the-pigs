@@ -180,7 +180,7 @@ PIGS.UI = {
         }
     },
     
-    setScore: function (round, player, score) {
+    setScore: function ( round, player, score ) {
         var r = parseInt(round) + 1;
         console.log('UI.setScore round: ' + r + ' player: ' + player + ' score: ' + score);
         
@@ -196,6 +196,8 @@ PIGS.UI = {
             var r = g.getCurrentRound();
             r.passPigs();
         }
+        
+        
     },
     
     setPlayerTotal: function (player, total) {
@@ -351,11 +353,14 @@ var PIGS = PIGS || {};
 PIGS.Competition = function(){
     /**
      * A competition can run multiple consecutive games keeping score until unloaded
+     * determine of the player 2 should be an ai player or human
      */
     
     this.games = [];
     this.players = [];
+    this.ai = true;
     var count = 0;
+    
     
     var gameCounter = function(){
         count++;
@@ -385,6 +390,18 @@ PIGS.Competition = function(){
         console.log(current);
         
         return this.getGame(current);
+    };
+    
+    this.getPreviousGame = function(){
+        if(gameCount() > 1){
+            var previous = gameCount() - 2;
+        } else {
+            return false;
+        }
+        
+        //console.log(previous);
+        
+        return this.getGame(previous);
     };
     
     this.getGame = function(idx) {
@@ -419,7 +436,7 @@ PIGS.Game = function(comp){
     this.competition = comp;
     this.maxplayers = 2;
     this.maxrounds = 10;
-    this.player = 1;
+    //this.player = 1;
     this.winner = null;
     this.status = 1;
     
@@ -484,10 +501,33 @@ PIGS.Game = function(comp){
         } else {
             this.winner = 2;
         }
-    }
-        
+    };
     
+    this.determineFirstPlayer = function(){
+        var prev = this.getPreviousGame();
+        
+        console.log('determine fisrt player');
+        console.log(prev);
+        
+        //if there is a previous game use it to calculate the first_player
+        //else first_player = 1
+        if(prev && prev.first_player == 1) {
+            this.first_player = 2
+            this.player = 2;
+        } else {
+            this.first_player = 1
+            this.player = 1;    
+        }
+    };
+    
+    this.getPreviousGame = function(){
+        //If this in NOT the first game then get the previous game
+        var prev = this.competition.getPreviousGame();
+        return prev;
+    };
+        
     //A new game should spawn a new Round...
+    this.determineFirstPlayer();
     this.newRound();
 };﻿//TODO: I need to create a round which comprises of a collection of turns, one for each player
 
@@ -503,7 +543,7 @@ PIGS.Round = function(game){
     //Each round has a turn for each player.
     //The round controls which player is active
     this.game = game;
-    this.game.player = 1;
+    //this.game.player = this.game.first_player;
     
     this.turns = {};
     
@@ -511,9 +551,21 @@ PIGS.Round = function(game){
     
     this.newTurn = function(){
         this.turns[this.game.player] = new PIGS.Turn(this.game);
+        
+        //Check if the 2nd player is AI?
+        //Otherwise the human player will play via the UI.
+        if(this.game.competition.ai) {
+            //then lets kick in the strategy for AI player
+            //hand this Turn to the strategy and let it play until Pass the Pigs OR Pig Out OR other turn ending event
+            PIGS.Strategy.go(this);
+        }
     }
     
     this.takeTurn = function(){
+        //outcome can be passed back to strategy to tell it whether the player pigged out or what have you
+        // 0 - turn over, 1 - turn can continue
+        var outcome = 1;
+        
         //Check game hasn't ended
         if(this.game.status == 0) {
             alert('Game has ended. Start another!');
@@ -573,6 +625,9 @@ PIGS.Round = function(game){
             }
             
         } else {
+            //Can roll again;
+            outcome = 1;
+            
             //If no pig out or special then update normal scores...
             
             //Set the cumulative player score - before accounting for special and pig outs
@@ -589,6 +644,8 @@ PIGS.Round = function(game){
         }
         
         console.log(this.game.players);
+        
+        return outcome;
     }
     
     //Control the flow of turns and rounds.
@@ -616,13 +673,57 @@ PIGS.Round = function(game){
         console.log('Pass the Pigs from ' + this.game.player + ' to ' + p);
         
         if(p > this.game.maxplayers) {
-            this.game.newRound();
+            this.game.player = 1;
         } else {
             this.game.player = p;
-            this.newTurn(); 
+        }
+        
+        //Depending on who started first it may be that the other player still needs to go in this round.
+        //Check if both turns have been taken in this round before moving to a new round.
+        if(this.checkAllPlayersHaveTakenTurn()) {
+            //Move to new round
+            this.game.newRound();
+        } else {
+            this.newTurn();
         }
         
         PIGS.UI.showPlayer();
+    };
+    
+    this.checkAllPlayersHaveTakenTurn = function(){
+        //count the number of turns.
+        //if they are all there then the riund is all done...
+        if(this.countTurns() < this.game.maxplayers) {
+            console.log('checkAllPlayersHaveTakenTurn false');
+            return false;
+        }
+        
+        console.log('checkAllPlayersHaveTakenTurn true');
+        return true;
+        
+        /*
+        for(idx in this.turns){
+            console.log('checking turns: ');
+            console.log(this.turns[idx]);
+            
+            if(this.turns[idx].score == null) {
+                console.log('checkAllPlayersHaveTakenTurn false');
+                return false;
+            }
+        }
+        
+        console.log('checkAllPlayersHaveTakenTurn true');
+        return true;
+        */
+    };
+    
+    this.countTurns = function(){
+        var size = 0, idx;
+        for(idx in this.turns){
+            if(this.turns.hasOwnProperty(idx)) size++; 
+        }
+        
+        return size;
     };
     
     this.newTurn();
@@ -631,7 +732,29 @@ PIGS.Round = function(game){
 /**
  * Pass the Pigs
  * @author Andrew Hill
- * PIGS.Turn
+ * PIGS.Strategy
+ */
+
+PIGS.Strategy = {
+    go: function(round){
+        //Roll then decide then roll then decide
+        var outcome = 1;
+        while(outcome) {
+            //Strategy decision then...
+            //implement a game strategy here...
+            
+            outcome = round.takeTurn();    
+        }
+        
+    }
+}
+
+PIGS.Strategy.roller = function(){
+    //Keep a log of the rolls so we can make decision about them.
+}/**
+ * Pass the Pigs
+ * @author Andrew Hill
+ * PIGS.Actions
  */
 
 var PIGS = PIGS || {};
