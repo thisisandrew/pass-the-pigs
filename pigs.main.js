@@ -8,6 +8,7 @@
 
 var PIGS = PIGS || {};
 var pigs = pigs || new PIGS.Competition();
+pigs.newGame();
 
 //UI Handlers - Simples for now...
 $(function () {

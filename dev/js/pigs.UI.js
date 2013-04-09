@@ -9,7 +9,7 @@ var PIGS = PIGS || {};
 PIGS.UI = {
     newGame: function () {
         pigs.newGame();
-        this.showPlayer(pigs.getCurrentGame().player);
+        this.showPlayer(pigs.getCurrentGame());
         this.clearGame();
     },
     
@@ -72,18 +72,15 @@ PIGS.UI = {
         $("#scores").show();
     },
     
-    showPlayer: function () {
-        var g = pigs.getCurrentGame();
-        
+    showPlayer: function (game) {
         $("#scoreboard #header #player_1").removeClass('current');
         $("#scoreboard #header #player_2").removeClass('current');
         
-        $("#scoreboard #header #player_" + g.player).addClass('current');
+        $("#scoreboard #header #player_" + game.player).addClass('current');
     },
     
-    endGame: function () {
-        var g = pigs.getCurrentGame();
-        alert("That's the end folks. Player " + g.winner + ' has won!');  
+    endGame: function (game) {
+        alert("That's the end folks. Player " + game.winner + ' has won!');  
     },
     
     clearGame: function () {

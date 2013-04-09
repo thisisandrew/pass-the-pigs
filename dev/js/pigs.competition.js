@@ -71,5 +71,5 @@ PIGS.Competition = function(){
         this.players[player].score = this.players[player].score + 1;
     };
     
-    this.newGame();
+    //this.newGame();
 }

@@ -38,7 +38,7 @@ PIGS.Round = function(game){
         //Check game hasn't ended
         if(this.game.status == 0) {
             alert('Game has ended. Start another!');
-            return;
+            return 0; //return zero outcome for strategy
         }
         
         var p = this.game.player;
@@ -156,7 +156,7 @@ PIGS.Round = function(game){
             this.newTurn();
         }
         
-        PIGS.UI.showPlayer();
+        PIGS.UI.showPlayer(this.game);
     };
     
     this.checkAllPlayersHaveTakenTurn = function(){

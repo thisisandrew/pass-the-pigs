@@ -70,7 +70,7 @@ PIGS.Game = function(comp){
         this.competition.incrementWinner(this.winner);
         this.status = 0;
         PIGS.UI.setGameScore(this.winner, this.competition.players[this.winner].score);
-        PIGS.UI.endGame();
+        PIGS.UI.endGame(this);
     };
 
     this.determineWinner = function(){
