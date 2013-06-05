@@ -17,22 +17,20 @@ PIGS.UI = {
         var g = pigs.getCurrentGame();
         var r = g.getCurrentRound();
         
-        console.log('UI roll: round: ' + r);
+        //__U.log('i', 'PIGS.UI.roll - round: ' + r);
         
         if(typeof r != 'undefined') {
             r.takeTurn();    
         } else {
-            alert('Game Over');          
+            alert('Game Over');
         }
     },
     
     setScore: function ( round, player, score ) {
         var r = parseInt(round) + 1;
-        console.log('UI.setScore round: ' + r + ' player: ' + player + ' score: ' + score);
+        //__U.log('i', 'PIGS.UI.setScore  - round: ' + r + ' player: ' + player + ' score: ' + score);
         
         var elem_id = "tr#round_" + r + " .player_" + player; 
-        console.log('Elem: ' + elem_id);
-        
         $(elem_id).text(score);    
     },
     
@@ -42,14 +40,11 @@ PIGS.UI = {
             var r = g.getCurrentRound();
             r.passPigs();
         }
-        
-        
     },
     
     setPlayerTotal: function (player, total) {
-        console.log('UI.setPlayerTotal player: ' + player + ' total: ' + total);
+        //__U.log('i', 'PIGS.UI.setPlayerTotal  - player: ' + player + ' total: ' + total);
         var elem_id = "#score_player_" + player;
-        
         
         $(elem_id).text(total);
     },

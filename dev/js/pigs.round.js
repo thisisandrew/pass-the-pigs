@@ -12,11 +12,9 @@ PIGS.Round = function(game){
     //Each round has a turn for each player.
     //The round controls which player is active
     this.game = game;
-    //this.game.player = this.game.first_player;
-    
     this.turns = {};
     
-    console.log('New Round: ');
+    __U.log('i', 'PIGS.Round - New Round');
     
     this.newTurn = function(){
         this.turns[this.game.player] = new PIGS.Turn(this.game);
@@ -44,13 +42,9 @@ PIGS.Round = function(game){
         var p = this.game.player;
         if(typeof this.game.players[p] == 'undefined') this.game.players[p] = { score: 0 };
         
-        console.log('takeTurn(): ' + p);
         //Roll until pass the pigs || pig out etc
         var turn = this.turns[p];
-        
         var result = turn.roll();
-        
-        console.log(result);
         
         //Set Cumulative Turn Scoreboard
         PIGS.UI.setScore(this.game.getRoundCount(), p, turn.score);
@@ -61,12 +55,7 @@ PIGS.Round = function(game){
             this.passPigs();
         } else if (result.positions.pos1 == 'special') {
             //Handle all special rolls
-            console.log('SPECIAL: ')
-            console.log(result);
-            
             if (result.positions.pos2 == 'makinbacon') {
-                console.log('makinbacon');
-                
                 this.game.players[p].score = 0;
                 PIGS.UI.setPlayerTotal(p, this.game.players[p].score);
                 
@@ -111,9 +100,7 @@ PIGS.Round = function(game){
                 this.game.end();
             }
         }
-        
-        console.log(this.game.players);
-        
+       
         return outcome;
     }
     
@@ -121,17 +108,13 @@ PIGS.Round = function(game){
     //Switches players and sytarts new round at end of previous.
     this.passPigs = function(){
         var p = this.game.player;
-        
-        console.log(this.turns[p].score);
-        
-        //TODO: Check if the player has rolled and scored before passing the pigs...
+       
         if(this.turns[p].score == null) {
             //No roll yet this turn
             alert('You must roll at least once before you Pass The Pigs');
             return;
         }
-
-        
+       
         //Accumulate points for this player
         if(typeof this.game.players[p] == 'undefined') this.game.players[p] = { score: 0 };
         this.game.players[p].score = this.game.players[p].score + this.turns[p].score;
@@ -139,7 +122,7 @@ PIGS.Round = function(game){
         
         p++;
         
-        console.log('Pass the Pigs from ' + this.game.player + ' to ' + p);
+        __U.log('i', 'Pass the Pigs from ' + this.game.player + ' to ' + (p > this.game.maxplayers ? 1 : p));
         
         if(p > this.game.maxplayers) {
             this.game.player = 1;
@@ -163,27 +146,10 @@ PIGS.Round = function(game){
         //count the number of turns.
         //if they are all there then the riund is all done...
         if(this.countTurns() < this.game.maxplayers) {
-            console.log('checkAllPlayersHaveTakenTurn false');
             return false;
         }
         
-        console.log('checkAllPlayersHaveTakenTurn true');
         return true;
-        
-        /*
-        for(idx in this.turns){
-            console.log('checking turns: ');
-            console.log(this.turns[idx]);
-            
-            if(this.turns[idx].score == null) {
-                console.log('checkAllPlayersHaveTakenTurn false');
-                return false;
-            }
-        }
-        
-        console.log('checkAllPlayersHaveTakenTurn true');
-        return true;
-        */
     };
     
     this.countTurns = function(){
@@ -196,5 +162,4 @@ PIGS.Round = function(game){
     };
     
     this.newTurn();
-    
 }

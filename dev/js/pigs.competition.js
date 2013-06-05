@@ -32,19 +32,15 @@ PIGS.Competition = function(){
         
         //Create a new game ready to play
         var idx = gameCounter();
-        console.log('gameCounter: ' + idx);
+        __U.log('i', 'gameCounter: ' + idx);
         
         this.games[idx-1] = new PIGS.Game(this);
         
-        console.log(this.games);
+        __U.log('i', this.games);
     };
     
     this.getCurrentGame = function(){
-        console.log('PIGS.Competition.getCurrentGame()');
-        
         var current = gameCount() - 1;
-        console.log(current);
-        
         return this.getGame(current);
     };
     
@@ -54,9 +50,7 @@ PIGS.Competition = function(){
         } else {
             return false;
         }
-        
-        //console.log(previous);
-        
+       
         return this.getGame(previous);
     };
     
@@ -70,6 +64,4 @@ PIGS.Competition = function(){
         if(typeof this.players[player] == 'undefined') this.players[player] = { score: 0 }; 
         this.players[player].score = this.players[player].score + 1;
     };
-    
-    //this.newGame();
 }

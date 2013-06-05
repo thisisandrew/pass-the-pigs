@@ -12,12 +12,14 @@ PIGS.Strategy = {
             //Strategy decision then...
             //implement a game strategy here...
             
-            outcome = round.takeTurn();    
+            __U.log('d', 'PIGS.Strategy.go - OutcomeBefore: ' + outcome);
+            outcome = round.takeTurn();   
+            __U.log('d', 'PIGS.Strategy.go - OutcomeAfter: ' + outcome);
         }
         
     }
 }
 
-PIGS.Strategy.roller = function(){
+PIGS.Strategy.history = function(){
     //Keep a log of the rolls so we can make decision about them.
 }

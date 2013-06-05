@@ -40,15 +40,12 @@ PIGS.Game = function(comp){
         var idx = roundCounter();
         
         if(idx > this.maxrounds) {
-            console.log('END OF GAME - Out of rounds');
-            console.log(this);
+            __U.log('i', 'PIGS.Game.newRound - Exceeded Max Rounds');
             this.end();
         } else {
+            __U.log('i', 'PIGS.Game.newRound - Round ' + idx);
             this.rounds[idx-1] = new PIGS.Round(this);
         }
-        
-        console.log('Rounds: ');
-        console.log(this.rounds);
     }
     
     this.getCurrentRound = function(){
@@ -74,10 +71,9 @@ PIGS.Game = function(comp){
     };
 
     this.determineWinner = function(){
+        //TODO Handle a tie?
+    
         //Who's got the mostest points?
-        console.log(this.players[1].score);
-        console.log(this.players[2].score);
-        
         if(this.players[1].score > this.players[2].score) {
             this.winner = 1;
         } else {
@@ -87,9 +83,6 @@ PIGS.Game = function(comp){
     
     this.determineFirstPlayer = function(){
         var prev = this.getPreviousGame();
-        
-        console.log('determine fisrt player');
-        console.log(prev);
         
         //if there is a previous game use it to calculate the first_player
         //else first_player = 1

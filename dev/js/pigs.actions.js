@@ -13,7 +13,7 @@ PIGS.Actions = {
 		var rnd1 = Math.random().toFixed(3);
         var rnd2 = Math.random().toFixed(3);
         
-        console.log(rnd1 + ' ' + rnd2);
+        //__U.log('i', rnd1 + ' ' + rnd2);
         
         if(rnd1 <= rnd2) {
             var pos1 = this.getPosition(rnd1);
@@ -31,8 +31,6 @@ PIGS.Actions = {
         }
         
         score = this.getScore(pos1, pos2);
-
-        console.log(score);
     
         PIGS.UI.showPositions(pos1, pos2);
         PIGS.UI.showScore(score.points, score.name);
@@ -44,8 +42,6 @@ PIGS.Actions = {
 		var pos = {};
 	
 		for(idx in PIGS.Odds.positions) {
-			//console.log(PIGS.Odds.positions[idx].pc);
-		
 			if(rnd <= PIGS.Odds.positions[idx].pc) {
 				pos = idx;
 				break;
@@ -59,8 +55,6 @@ PIGS.Actions = {
         var pos = {};
 	
 		for(idx in PIGS.Odds.specials) {
-			//console.log(PIGS.Odds.specials[idx].pc);
-		
 			if(rnd <= PIGS.Odds.specials[idx].pc) {
 				pos = idx;
 				break;
@@ -71,8 +65,6 @@ PIGS.Actions = {
     },
     
     getScore: function(pos1, pos2){
-        console.log(pos1 + ' ' + pos2);
-        
         for(idx in PIGS.Score) {
             if(PIGS.Score[idx].pos1 == pos1 && PIGS.Score[idx].pos2 == pos2) {
                 return PIGS.Score[idx].score;
@@ -82,11 +74,9 @@ PIGS.Actions = {
     
     checkSpecial: function(rnd){
         if(rnd <= PIGS.Odds.positions['special'].odds){
-            console.log('Special: ' + rnd);
             return true;
         }
-        
-        console.log('Not Special: ' +rnd);
+
         return false;
     }
 }
